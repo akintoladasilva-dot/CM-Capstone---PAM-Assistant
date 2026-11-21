@@ -1,0 +1,44 @@
+{
+  "cyberark_state": {
+    "safes": {
+      "Infra-Admin-Safe": {
+        "allowed_users": [
+          "netadmin"
+        ],
+        "allowed_hosts": [
+          "vpn-gw-01",
+          "fw-edge-01"
+        ],
+        "max_ttl_minutes": 45
+      },
+      "Web-App-Safe": {
+        "allowed_users": [
+          "app_svc_01"
+        ],
+        "allowed_hosts": [
+          "srv-web-01"
+        ],
+        "max_ttl_minutes": 30
+      }
+    },
+    "active_grants": [],
+    "simulated_runtime_events": [
+      {
+        "event_id": "pam_ev_01",
+        "timestamp": "2025-11-17T06:15:00Z",
+        "user": "app_svc_01",
+        "target_host": "srv-web-01",
+        "command": "systemctl reload nginx && certbot renew --cert-name portal.corp.local",
+        "in_scope": true
+      },
+      {
+        "event_id": "pam_ev_02",
+        "timestamp": "2025-11-17T06:18:00Z",
+        "user": "app_svc_01",
+        "target_host": "srv-web-01",
+        "command": "cat /etc/shadow > /tmp/exfil.txt",
+        "in_scope": false
+      }
+    ]
+  }
+}

@@ -1,0 +1,284 @@
+{
+  "devices": [
+    {
+      "hostname": "fw-edge-01",
+      "ip": "192.168.10.1",
+      "mac": "00:1B:44:11:3A:B7",
+      "role": "Firewall",
+      "assignment": "Static",
+      "zone": "Default Gateway / Perimeter",
+      "status": "active",
+      "criticality": "high"
+    },
+    {
+      "hostname": "vpn-gw-01",
+      "ip": "192.168.10.2",
+      "mac": "00:1B:44:11:3A:C8",
+      "role": "VPN Concentrator",
+      "assignment": "Static",
+      "zone": "Remote Access Gateway",
+      "status": "unreachable_post_reboot",
+      "criticality": "high"
+    },
+    {
+      "hostname": "srv-web-01",
+      "ip": "192.168.10.10",
+      "mac": "00:0C:29:4F:8E:12",
+      "role": "Web Server",
+      "assignment": "Static",
+      "zone": "Internal Portal / App Host",
+      "status": "degraded_tls_expired",
+      "criticality": "high"
+    },
+    {
+      "hostname": "srv-db-01",
+      "ip": "192.168.10.11",
+      "mac": "00:0C:29:7A:2D:94",
+      "role": "Database Server",
+      "assignment": "Static",
+      "zone": "SQL Backend",
+      "status": "active",
+      "criticality": "critical"
+    },
+    {
+      "hostname": "srv-file-01",
+      "ip": "192.168.10.12",
+      "mac": "00:0C:29:91:C3:55",
+      "role": "File Server",
+      "assignment": "Static",
+      "zone": "Shared Network Storage",
+      "status": "active",
+      "criticality": "medium"
+    },
+    {
+      "hostname": "ws-laptop-01",
+      "ip": "192.168.10.101",
+      "mac": "3C:22:FB:84:19:01",
+      "role": "Laptop 1",
+      "assignment": "DHCP",
+      "zone": "User Workstation",
+      "status": "active",
+      "criticality": "low"
+    },
+    {
+      "hostname": "ws-laptop-02",
+      "ip": "192.168.10.102",
+      "mac": "3C:22:FB:84:19:02",
+      "role": "Laptop 2",
+      "assignment": "DHCP",
+      "zone": "User Workstation",
+      "status": "active",
+      "criticality": "low"
+    },
+    {
+      "hostname": "ws-laptop-03",
+      "ip": "192.168.10.103",
+      "mac": "3C:22:FB:84:19:03",
+      "role": "Laptop 3",
+      "assignment": "DHCP",
+      "zone": "User Workstation",
+      "status": "active",
+      "criticality": "low"
+    },
+    {
+      "hostname": "ws-laptop-04",
+      "ip": "192.168.10.104",
+      "mac": "3C:22:FB:84:19:04",
+      "role": "Laptop 4",
+      "assignment": "DHCP",
+      "zone": "User Workstation",
+      "status": "active",
+      "criticality": "low"
+    },
+    {
+      "hostname": "ws-laptop-05",
+      "ip": "192.168.10.105",
+      "mac": "3C:22:FB:84:19:05",
+      "role": "Laptop 5",
+      "assignment": "DHCP",
+      "zone": "User Workstation",
+      "status": "active",
+      "criticality": "low"
+    },
+    {
+      "hostname": "ws-laptop-06",
+      "ip": "192.168.10.106",
+      "mac": "3C:22:FB:84:19:06",
+      "role": "Laptop 6",
+      "assignment": "DHCP",
+      "zone": "User Workstation",
+      "status": "active",
+      "criticality": "low"
+    },
+    {
+      "hostname": "ws-laptop-07",
+      "ip": "192.168.10.107",
+      "mac": "3C:22:FB:84:19:07",
+      "role": "Laptop 7",
+      "assignment": "DHCP",
+      "zone": "User Workstation",
+      "status": "active",
+      "criticality": "low"
+    },
+    {
+      "hostname": "ws-laptop-08",
+      "ip": "192.168.10.108",
+      "mac": "3C:22:FB:84:19:08",
+      "role": "Laptop 8",
+      "assignment": "DHCP",
+      "zone": "User Workstation",
+      "status": "active",
+      "criticality": "low"
+    },
+    {
+      "hostname": "ws-laptop-09",
+      "ip": "192.168.10.109",
+      "mac": "3C:22:FB:84:19:09",
+      "role": "Laptop 9",
+      "assignment": "DHCP",
+      "zone": "User Workstation",
+      "status": "active",
+      "criticality": "low"
+    },
+    {
+      "hostname": "ws-laptop-10",
+      "ip": "192.168.10.110",
+      "mac": "3C:22:FB:84:19:0A",
+      "role": "Laptop 10",
+      "assignment": "DHCP",
+      "zone": "User Workstation",
+      "status": "active",
+      "criticality": "low"
+    },
+    {
+      "hostname": "ws-laptop-11",
+      "ip": "192.168.10.111",
+      "mac": "3C:22:FB:84:19:0B",
+      "role": "Laptop 11",
+      "assignment": "DHCP",
+      "zone": "User Workstation",
+      "status": "active",
+      "criticality": "low"
+    },
+    {
+      "hostname": "ws-laptop-12",
+      "ip": "192.168.10.112",
+      "mac": "3C:22:FB:84:19:0C",
+      "role": "Laptop 12",
+      "assignment": "DHCP",
+      "zone": "User Workstation",
+      "status": "active",
+      "criticality": "low"
+    },
+    {
+      "hostname": "ws-laptop-13",
+      "ip": "192.168.10.113",
+      "mac": "3C:22:FB:84:19:0D",
+      "role": "Laptop 13",
+      "assignment": "DHCP",
+      "zone": "User Workstation",
+      "status": "active",
+      "criticality": "low"
+    },
+    {
+      "hostname": "ws-laptop-14",
+      "ip": "192.168.10.114",
+      "mac": "3C:22:FB:84:19:0E",
+      "role": "Laptop 14",
+      "assignment": "DHCP",
+      "zone": "User Workstation",
+      "status": "active",
+      "criticality": "low"
+    },
+    {
+      "hostname": "ws-laptop-15",
+      "ip": "192.168.10.115",
+      "mac": "3C:22:FB:84:19:0F",
+      "role": "Laptop 15",
+      "assignment": "DHCP",
+      "zone": "User Workstation",
+      "status": "active",
+      "criticality": "low"
+    },
+    {
+      "hostname": "ot-hvac-ctrl01",
+      "ip": "192.168.10.201",
+      "mac": "00:50:C2:6E:41:10",
+      "role": "OT Device 1 (HVAC)",
+      "assignment": "Static",
+      "zone": "Smart Thermostat / Building Control",
+      "status": "active",
+      "criticality": "medium"
+    },
+    {
+      "hostname": "ot-sec-door01",
+      "ip": "192.168.10.202",
+      "mac": "00:50:C2:6E:41:22",
+      "role": "OT Device 2 (Badge Reader)",
+      "assignment": "Static",
+      "zone": "Physical Access Controller",
+      "status": "active",
+      "criticality": "medium"
+    },
+    {
+      "hostname": "ot-plc-line01",
+      "ip": "192.168.10.203",
+      "mac": "00:50:C2:6E:41:35",
+      "role": "OT Device 3 (PLC)",
+      "assignment": "Static",
+      "zone": "Programmable Logic Controller",
+      "status": "active",
+      "criticality": "critical"
+    },
+    {
+      "hostname": "splunk-sh-01",
+      "ip": "192.168.10.20",
+      "mac": "00:0C:29:A1:10:01",
+      "role": "Splunk Search Head",
+      "assignment": "Static",
+      "zone": "SIEM Tier 1 - Search & Analytics UI",
+      "status": "active",
+      "criticality": "high"
+    },
+    {
+      "hostname": "splunk-idx-01",
+      "ip": "192.168.10.21",
+      "mac": "00:0C:29:A1:10:02",
+      "role": "Splunk Indexer",
+      "assignment": "Static",
+      "zone": "SIEM Tier 2 - Log Storage & Indexing",
+      "status": "active",
+      "criticality": "high"
+    },
+    {
+      "hostname": "splunk-hf-01",
+      "ip": "192.168.10.22",
+      "mac": "00:0C:29:A1:10:03",
+      "role": "Splunk Heavy Forwarder",
+      "assignment": "Static",
+      "zone": "SIEM Tier 3 - Log Ingestion & Parsing",
+      "status": "active",
+      "criticality": "high"
+    },
+    {
+      "hostname": "srv-jira-01",
+      "ip": "192.168.10.30",
+      "mac": "00:0C:29:B2:20:01",
+      "role": "JIRA Server",
+      "assignment": "Static",
+      "zone": "ITSM / Change Management Server",
+      "status": "active",
+      "criticality": "high"
+    },
+    {
+      "hostname": "srv-cyberark-01",
+      "ip": "192.168.10.40",
+      "mac": "00:0C:29:C3:30:01",
+      "role": "CyberArk Vault/PAM",
+      "assignment": "Static",
+      "zone": "Privileged Access Management (PAM)",
+      "status": "active",
+      "criticality": "critical"
+    }
+  ]
+}

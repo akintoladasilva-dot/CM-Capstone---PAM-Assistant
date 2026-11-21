@@ -1,0 +1,25 @@
+{
+  "policy_chunks": [
+    {
+      "doc_id": "POL-CHG-003",
+      "version": "v3.2",
+      "status": "Active",
+      "title": "Break-Fix Authorization & Evidence Thresholds",
+      "content": "Unscheduled break-fix changes without an approved CR require log evidence matching the claimed window, independent corroboration, and a Supported score exceeding H4 by at least 0.15."
+    },
+    {
+      "doc_id": "POL-CHG-001",
+      "version": "v1.0",
+      "status": "Superseded",
+      "title": "Legacy Verbal Break-Fix Rule (Stale)",
+      "content": "Administrators may receive emergency access immediately upon verbal claim without log verification."
+    },
+    {
+      "doc_id": "POL-PAM-007",
+      "version": "v2.1",
+      "status": "Active",
+      "title": "Just-in-Time Session Limits & Anomaly Revocation",
+      "content": "Privileged sessions are time-bound, scoped to approved target hosts, and automatically revoked by the Access Broker upon out-of-scope commands."
+    }
+  ]
+}

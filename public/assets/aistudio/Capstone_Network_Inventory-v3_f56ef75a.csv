@@ -1,0 +1,29 @@
+Device Role,Hostname,IP Address,Mock MAC Address,Assignment Type,Notes / Subnet Zone
+Firewall,fw-edge-01,192.168.10.1,00:1B:44:11:3A:B7,Static,Default Gateway / Perimeter
+VPN Concentrator,vpn-gw-01,192.168.10.2,00:1B:44:11:3A:C8,Static,Remote Access Gateway
+Web Server,srv-web-01,192.168.10.10,00:0C:29:4F:8E:12,Static,Internal Portal / App Host
+Database Server,srv-db-01,192.168.10.11,00:0C:29:7A:2D:94,Static,SQL Backend
+File Server,srv-file-01,192.168.10.12,00:0C:29:91:C3:55,Static,Shared Network Storage
+Laptop 1,ws-laptop-01,192.168.10.101,3C:22:FB:84:19:01,DHCP,User Workstation
+Laptop 2,ws-laptop-02,192.168.10.102,3C:22:FB:84:19:02,DHCP,User Workstation
+Laptop 3,ws-laptop-03,192.168.10.103,3C:22:FB:84:19:03,DHCP,User Workstation
+Laptop 4,ws-laptop-04,192.168.10.104,3C:22:FB:84:19:04,DHCP,User Workstation
+Laptop 5,ws-laptop-05,192.168.10.105,3C:22:FB:84:19:05,DHCP,User Workstation
+OT Device 1 (HVAC),ot-hvac-ctrl01,192.168.10.201,00:50:C2:6E:41:10,Static,Smart Thermostat / Building Control
+OT Device 2 (Badge Reader),ot-sec-door01,192.168.10.202,00:50:C2:6E:41:22,Static,Physical Access Controller
+OT Device 3 (PLC),ot-plc-line01,192.168.10.203,00:50:C2:6E:41:35,Static,Programmable Logic Controller
+Splunk Search Head,splunk-sh-01,192.168.10.20,00:0C:29:A1:10:01,Static,SIEM Tier 1 - Search & Analytics UI
+Splunk Indexer,splunk-idx-01,192.168.10.21,00:0C:29:A1:10:02,Static,SIEM Tier 2 - Log Storage & Indexing
+Splunk Heavy Forwarder,splunk-hf-01,192.168.10.22,00:0C:29:A1:10:03,Static,SIEM Tier 3 - Log Ingestion & Parsing
+JIRA Server,srv-jira-01,192.168.10.30,00:0C:29:B2:20:01,Static,ITSM / Change Management Server
+CyberArk Vault/PAM,srv-cyberark-01,192.168.10.40,00:0C:29:C3:30:01,Static,Privileged Access Management (PAM)
+Laptop 6,ws-laptop-06,192.168.10.106,3C:22:FB:84:19:06,DHCP,User Workstation
+Laptop 7,ws-laptop-07,192.168.10.107,3C:22:FB:84:19:07,DHCP,User Workstation
+Laptop 8,ws-laptop-08,192.168.10.108,3C:22:FB:84:19:08,DHCP,User Workstation
+Laptop 9,ws-laptop-09,192.168.10.109,3C:22:FB:84:19:09,DHCP,User Workstation
+Laptop 10,ws-laptop-10,192.168.10.110,3C:22:FB:84:19:0A,DHCP,User Workstation
+Laptop 11,ws-laptop-11,192.168.10.111,3C:22:FB:84:19:0B,DHCP,User Workstation
+Laptop 12,ws-laptop-12,192.168.10.112,3C:22:FB:84:19:0C,DHCP,User Workstation
+Laptop 13,ws-laptop-13,192.168.10.113,3C:22:FB:84:19:0D,DHCP,User Workstation
+Laptop 14,ws-laptop-14,192.168.10.114,3C:22:FB:84:19:0E,DHCP,User Workstation
+Laptop 15,ws-laptop-15,192.168.10.115,3C:22:FB:84:19:0F,DHCP,User Workstation

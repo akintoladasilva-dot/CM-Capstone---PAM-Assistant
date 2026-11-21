@@ -1,0 +1,19 @@
+{
+  "tot_runs": {},
+  "rubric_config": {
+    "weights": {
+      "evidence_match": 0.35,
+      "independent_corroboration": 0.25,
+      "fit_to_requested_change": 0.2,
+      "no_contradiction": 0.2
+    },
+    "beam_width": 2,
+    "protected_null_hypothesis_id": "H4",
+    "max_depth": 3,
+    "supported_threshold": 0.8,
+    "inconclusive_ceiling": 0.6,
+    "prune_floor": 0.3,
+    "h4_required_margin": 0.15,
+    "tie_delta": 0.05
+  }
+}

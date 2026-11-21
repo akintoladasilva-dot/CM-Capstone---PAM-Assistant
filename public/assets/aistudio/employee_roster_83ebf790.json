@@ -1,0 +1,41 @@
+{
+  "employees": [
+    {
+      "user_id": "netadmin",
+      "display_name": "Network Administrator (Placeholder)",
+      "role": "Network & Security Engineer",
+      "department": "Infrastructure",
+      "pam_eligible_safes": [
+        "Infra-Admin-Safe"
+      ],
+      "max_session_ttl_minutes": 60,
+      "change_history": {
+        "total_requests": 14,
+        "completed_on_time": 13,
+        "missed_window_or_failed": 1,
+        "historical_patterns": [
+          "annual_cert_renewal",
+          "gateway_maintenance"
+        ]
+      }
+    },
+    {
+      "user_id": "app_svc_01",
+      "display_name": "Application Engineer (Placeholder)",
+      "role": "Web Platform Engineer",
+      "department": "Application Ops",
+      "pam_eligible_safes": [
+        "Web-App-Safe"
+      ],
+      "max_session_ttl_minutes": 30,
+      "change_history": {
+        "total_requests": 8,
+        "completed_on_time": 5,
+        "missed_window_or_failed": 3,
+        "historical_patterns": [
+          "tls_cert_renewal"
+        ]
+      }
+    }
+  ]
+}

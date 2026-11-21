@@ -1,0 +1,38 @@
+{
+  "change_requests": [
+    {
+      "cr_id": "CHG-1042",
+      "status": "APPROVED",
+      "target_host": "srv-web-01",
+      "change_type": "routine_tls_cert_renewal",
+      "window_start": "2025-11-17T06:00:00Z",
+      "window_end": "2025-11-17T08:00:00Z",
+      "requested_by": "app_svc_01",
+      "impact_tier": "low"
+    }
+  ],
+  "incidents": [
+    {
+      "inc_id": "INC-9001",
+      "status": "OPEN",
+      "target_host": "vpn-gw-01",
+      "summary": "vpn-gw-01 unreachable after 02:00:00Z reboot",
+      "created_at": "2025-11-17T02:05:00Z"
+    }
+  ],
+  "operations_calendar": {
+    "moratoriums": [
+      {
+        "moratorium_id": "MOR-2025-11-17-OT",
+        "target_zones": [
+          "Programmable Logic Controller",
+          "Physical Access Controller",
+          "Smart Thermostat / Building Control"
+        ],
+        "start": "2025-11-17T00:00:00Z",
+        "end": "2025-11-17T23:59:59Z",
+        "reason": "Production OT freeze"
+      }
+    ]
+  }
+}
