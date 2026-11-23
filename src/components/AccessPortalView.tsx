@@ -139,9 +139,14 @@ export function AccessPortalView({
           claimed_issue: `${pendingClarificationReq.claimed_issue} | Follow-up: ${text}`,
         }
       : {
-          ...request,
           request_id: `portal-${turnStartedAt.toString().slice(-6)}`,
+          user_id: '',
+          target_host: '',
+          window_start: '',
+          window_end: '',
+          is_break_fix: false,
           claimed_issue: text,
+          requested_ttl_minutes: 30,
         };
 
     const parsePrompt = pendingClarificationReq

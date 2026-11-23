@@ -29,9 +29,7 @@ const cliHost = getCliArg('--host');
 const PORT =
   cliPort && !Number.isNaN(Number(cliPort))
     ? Number(cliPort)
-    : process.env.NODE_ENV === 'production'
-      ? Number(process.env.PORT ?? 3000)
-      : Number(process.env.DEFAULT_APP_PORT ?? 3000);
+    : Number(process.env.PORT ?? process.env.DEFAULT_APP_PORT ?? 3000);
 const HOST = cliHost || '0.0.0.0';
 
 const store = new Phase1MockStore();
@@ -209,7 +207,6 @@ app.post('/api/orchestrate/parse-nl', async (req, res) => {
     const parsed = await parseNaturalLanguageRequest(
       prompt,
       store.devices.map((d) => d.hostname),
-      store.employees.map((e) => e.user_id),
     );
     res.json({ request: parsed });
   } catch (err) {
@@ -238,6 +235,8 @@ app.post('/api/benchmark/run', async (_req, res) => {
 
 async function startServer() {
   const isProd = process.env.NODE_ENV === 'production';
+
+  let viteServerPromise: Promise<{ close: () => Promise<void> }> | null = null;
 
   if (!isProd) {
     process.env.DISABLE_HMR = 'true';
@@ -308,12 +307,18 @@ export class ErrorOverlay extends (globalThis.HTMLElement || class {}) {}
 `);
     });
 
-    const vitePromise = import('vite').then(({ createServer: createViteServer }) =>
-      createViteServer({
-        server: { middlewareMode: true, hmr: false, ws: false },
-        appType: 'spa',
-      }),
-    );
+    const vitePromise = import('vite')
+      .then(({ createServer: createViteServer }) =>
+        createViteServer({
+          server: { middlewareMode: true, hmr: false, ws: false },
+          appType: 'spa',
+        }),
+      )
+      .catch((err) => {
+        console.error('Vite middleware initialization failed:', err);
+        throw err;
+      });
+    viteServerPromise = vitePromise;
 
     app.use(async (req, res, next) => {
       try {
@@ -344,6 +349,26 @@ export class ErrorOverlay extends (globalThis.HTMLElement || class {}) {}
     console.error('Server failed to bind:', err);
     process.exit(1);
   });
+
+  let shuttingDown = false;
+  const shutdown = async (signal: string) => {
+    if (shuttingDown) return;
+    shuttingDown = true;
+    console.log(`Received ${signal}, shutting down dev server cleanly...`);
+    server.close();
+    if (viteServerPromise) {
+      try {
+        const vite = await viteServerPromise;
+        await vite.close();
+      } catch {
+        // Ignore Vite close errors during shutdown
+      }
+    }
+    process.exit(0);
+  };
+
+  process.once('SIGTERM', () => void shutdown('SIGTERM'));
+  process.once('SIGINT', () => void shutdown('SIGINT'));
 }
 
 startServer().catch((err) => {

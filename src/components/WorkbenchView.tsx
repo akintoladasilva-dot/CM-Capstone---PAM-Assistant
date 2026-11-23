@@ -219,7 +219,11 @@ export function WorkbenchView({
                 </option>
               ))}
               {!userInRoster && (
-                <option value="__custom__">{request.user_id} (unlisted)</option>
+                <option value="__custom__">
+                  {request.user_id
+                    ? `${request.user_id} (unlisted)`
+                    : '(no user specified)'}
+                </option>
               )}
             </select>
           </div>

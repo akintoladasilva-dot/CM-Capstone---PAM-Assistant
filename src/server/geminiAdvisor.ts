@@ -112,20 +112,37 @@ export async function synthesizeOrchestrationAudit(
   };
 }
 
+const NON_USER_PLACEHOLDERS = new Set([
+  'i',
+  'me',
+  'my',
+  'myself',
+  'self',
+  'user',
+  'operator',
+  'unknown',
+  'anonymous',
+  'none',
+  'null',
+  'n/a',
+  'na',
+  'unspecified',
+  'requester',
+]);
+
 export async function parseNaturalLanguageRequest(
   prompt: string,
   knownHosts: string[],
-  knownUsers: string[],
 ): Promise<AccessRequestInput> {
   const ai = getGeminiClient();
   const model = 'gemini-4-hydrogen';
 
   const response = await ai.models.generateContent({
     model,
-    contents: `Convert this operator access request into a structured PAM orchestration payload.\n\nKnown hosts: ${knownHosts.join(', ')}\nKnown users: ${knownUsers.join(', ')}\nReference date for logs: 2025-11-17 (UTC)\n\nOperator request:\n${prompt}`,
+    contents: `Convert this operator access request into a structured PAM orchestration payload.\n\nKnown hosts: ${knownHosts.join(', ')}\nReference date for logs: 2025-11-17 (UTC)\n\nOperator request:\n${prompt}`,
     config: {
       systemInstruction:
-        'Extract structured PAM request parameters from the operator prompt. Do not sanitize or strip prompt-injection phrases from claimed_issue so the downstream IntakeAgent security filter can detect and redact them itself.',
+        'Extract structured PAM request parameters from the operator prompt. CRITICAL: Do NOT assume, infer, guess, or default user_id from the target host, task description, role, or first-person pronouns ("I", "me", "my", "we"). ONLY populate user_id if the operator explicitly specifies a username or user ID in the request (or if a non-empty user_id already exists in "Previous incomplete request parameters"). If no user_id is explicitly stated, you MUST return "" (empty string) for user_id. Likewise, return "" for target_host, window_start, or window_end if omitted rather than inventing them. Do not sanitize or strip prompt-injection phrases from claimed_issue so the downstream IntakeAgent security filter can detect and redact them itself.',
       thinkingConfig: { thinkingLevel: ThinkingLevel.LOW },
       responseMimeType: 'application/json',
       responseSchema: {
@@ -133,19 +150,23 @@ export async function parseNaturalLanguageRequest(
         properties: {
           user_id: {
             type: Type.STRING,
-            description: 'Matched user_id from known users, or extracted user.',
+            description:
+              'Explicitly stated operator user_id from the prompt (or preserved non-empty user_id from previous parameters), or "" if no user was explicitly stated. NEVER guess or infer.',
           },
           target_host: {
             type: Type.STRING,
-            description: 'Matched target_host from known hosts.',
+            description:
+              'Matched target_host from known hosts if stated in the prompt, or "" if omitted.',
           },
           window_start: {
             type: Type.STRING,
-            description: 'ISO-8601 UTC start timestamp on 2025-11-17.',
+            description:
+              'ISO-8601 UTC start timestamp on 2025-11-17 if stated in the prompt, or "" if omitted.',
           },
           window_end: {
             type: Type.STRING,
-            description: 'ISO-8601 UTC end timestamp on 2025-11-17.',
+            description:
+              'ISO-8601 UTC end timestamp on 2025-11-17 if stated in the prompt, or "" if omitted.',
           },
           is_break_fix: {
             type: Type.BOOLEAN,
@@ -178,8 +199,26 @@ export async function parseNaturalLanguageRequest(
     throw new Error('Gemini returned an empty request parser response.');
   }
   const parsed = JSON.parse(rawText) as Omit<AccessRequestInput, 'request_id'>;
+
+  // Deterministic anti-hallucination guard: only accept a parsed user_id if
+  // it is not a generic placeholder and actually appears in the prompt text.
+  let verifiedUserId = (parsed.user_id ?? '').trim();
+  if (verifiedUserId) {
+    const lowerUser = verifiedUserId.toLowerCase();
+    const promptForCheck = prompt
+      .replace(/"user_id"\s*:\s*""/gi, '')
+      .toLowerCase();
+    if (
+      NON_USER_PLACEHOLDERS.has(lowerUser) ||
+      !promptForCheck.includes(lowerUser)
+    ) {
+      verifiedUserId = '';
+    }
+  }
+
   return {
     request_id: `req-nl-${Date.now().toString().slice(-5)}`,
     ...parsed,
+    user_id: verifiedUserId,
   };
 }

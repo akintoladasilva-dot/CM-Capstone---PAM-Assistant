@@ -35,6 +35,26 @@ function round4(val: number): number {
   return Math.round(val * 10000) / 10000;
 }
 
+function hasOngoingCorroboratedOutage(
+  normReq: NormalizedRequest,
+  evidence: EvidenceBundle,
+): boolean {
+  if (evidence.splunk_events.length > 0 || evidence.timeout_error) {
+    return false;
+  }
+  const hasCorrobCriticalOrError = evidence.corroborating_events.some((e) =>
+    ['ERROR', 'CRITICAL'].includes(e.severity),
+  );
+  const hasOpenIncident = evidence.incidents.some((i) => i.status === 'OPEN');
+  const isUnreachableStatus = normReq.device_meta.status
+    .toLowerCase()
+    .includes('unreachable');
+
+  return (
+    hasCorrobCriticalOrError && (hasOpenIncident || isUnreachableStatus)
+  );
+}
+
 export class IntakeAgent {
   public process(
     rawReq: AccessRequestInput,
@@ -52,10 +72,11 @@ export class IntakeAgent {
         clarification_attempts: number;
         normalized_request: NormalizedRequest;
       } {
-    const host = rawReq.target_host;
+    const host = typeof rawReq.target_host === 'string' ? rawReq.target_host.trim() : '';
     const start = rawReq.window_start;
     const end = rawReq.window_end;
-    const userId = rawReq.user_id || 'unknown';
+    const rawUserId = typeof rawReq.user_id === 'string' ? rawReq.user_id.trim() : '';
+    const userId = rawUserId || 'unknown';
     const isBreakFix = Boolean(rawReq.is_break_fix);
     const { cleaned: claimedIssue, redactedDirectives } = sanitizeUntrustedText(
       String(rawReq.claimed_issue ?? ''),
@@ -71,8 +92,10 @@ export class IntakeAgent {
     if (!start || !end) {
       missing.push('window_start and window_end');
     }
-    if (!knownUsers.has(userId)) {
-      missing.push(`valid user_id (got '${userId}')`);
+    if (!rawUserId) {
+      missing.push('user_id (no user specified)');
+    } else if (!knownUsers.has(rawUserId)) {
+      missing.push(`valid user_id (got '${rawUserId}')`);
     }
 
     if (missing.length > 0 && attempts < 1) {
@@ -245,13 +268,15 @@ export class PolicyToTEvaluator {
     const moratoriums = evidence.active_moratoriums;
     const hasMoratorium = moratoriums.length > 0;
 
-    const hasFaultLogs = events.some((e) =>
+    const hasTargetFaultLogs = events.some((e) =>
       ['WARNING', 'ERROR', 'CRITICAL'].includes(e.severity),
     );
+    const hasOngoingOutage = hasOngoingCorroboratedOutage(normReq, evidence);
+    const hasFaultLogs = hasTargetFaultLogs || hasOngoingOutage;
     const hasCorrobFaults = corrob.some((e) =>
       ['WARNING', 'ERROR', 'CRITICAL'].includes(e.severity),
     );
-    const allHealthyInfo = events.length > 0 && !hasFaultLogs;
+    const allHealthyInfo = events.length > 0 && !hasTargetFaultLogs;
     const crBreakfixConflict = hasApprovedCr && normReq.is_break_fix;
 
     const baseHypotheses = [
@@ -468,7 +493,7 @@ export class PolicyToTEvaluator {
 
 export class CriticAgent {
   public review(
-    _normReq: NormalizedRequest,
+    normReq: NormalizedRequest,
     evidence: EvidenceBundle,
     policyEval: PolicyEvaluationResult,
   ): CriticReviewResult {
@@ -486,11 +511,12 @@ export class CriticAgent {
     }
 
     if (proposedFinding === 'Supported') {
-      const hasFault = evidence.splunk_events.some((e) =>
+      const hasTargetFault = evidence.splunk_events.some((e) =>
         ['WARNING', 'ERROR', 'CRITICAL'].includes(e.severity),
       );
+      const hasOngoingOutage = hasOngoingCorroboratedOutage(normReq, evidence);
       const hasCr = policyEval.has_approved_cr;
-      if (!hasFault && !hasCr) {
+      if (!hasTargetFault && !hasOngoingOutage && !hasCr) {
         objections.push(
           'Supported finding lacks both fault telemetry and an approved CR.',
         );
@@ -626,8 +652,18 @@ export class AccessBrokerAgent {
 
 export class ReporterAgent {
   public getCitedEventIds(evidence: EvidenceBundle): string[] {
-    return evidence.splunk_events
-      .filter((e) => ['WARNING', 'ERROR', 'CRITICAL'].includes(e.severity))
+    const faultSeverities = ['WARNING', 'ERROR', 'CRITICAL'];
+    const targetFaults = evidence.splunk_events
+      .filter((e) => faultSeverities.includes(e.severity))
+      .map((e) => e.event_id ?? '')
+      .filter(Boolean);
+
+    if (targetFaults.length > 0) {
+      return targetFaults.slice(0, 6);
+    }
+
+    return evidence.corroborating_events
+      .filter((e) => faultSeverities.includes(e.severity))
       .slice(0, 6)
       .map((e) => e.event_id ?? '')
       .filter(Boolean);
