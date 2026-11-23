@@ -14,10 +14,25 @@ import {
 import { Phase1MockStore } from './src/server/mockStore.ts';
 import { HubAndSpokeOrchestrator } from './src/server/orchestrator.ts';
 
+function getCliArg(flag: string): string | undefined {
+  const idx = process.argv.indexOf(flag);
+  if (idx !== -1 && idx + 1 < process.argv.length) {
+    return process.argv[idx + 1];
+  }
+  const prefix = `${flag}=`;
+  const found = process.argv.find((arg) => arg.startsWith(prefix));
+  return found ? found.slice(prefix.length) : undefined;
+}
+
+const cliPort = getCliArg('--port');
+const cliHost = getCliArg('--host');
 const PORT =
-  process.env.NODE_ENV === 'production'
-    ? Number(process.env.PORT ?? 3000)
-    : 3000;
+  cliPort && !Number.isNaN(Number(cliPort))
+    ? Number(cliPort)
+    : process.env.NODE_ENV === 'production'
+      ? Number(process.env.PORT ?? 3000)
+      : Number(process.env.DEFAULT_APP_PORT ?? 3000);
+const HOST = cliHost || '0.0.0.0';
 
 const store = new Phase1MockStore();
 store.loadAll();
@@ -35,6 +50,20 @@ app.get('/api/health', (_req, res) => {
     gemini_configured: Boolean(process.env.GEMINI_API_KEY),
     stats: validationReport.stats,
   });
+});
+
+app.get('/api/build-instructions.txt', (_req, res) => {
+  const filePath = path.resolve(process.cwd(), 'BUILD_INSTRUCTIONS.txt');
+  if (!fs.existsSync(filePath)) {
+    res.status(404).type('text/plain').send('Build instructions file not found.');
+    return;
+  }
+  res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+  res.setHeader(
+    'Content-Disposition',
+    'attachment; filename="BUILD_INSTRUCTIONS.txt"',
+  );
+  res.sendFile(filePath);
 });
 
 app.get('/api/fixtures', (_req, res) => {
@@ -212,11 +241,7 @@ async function startServer() {
 
   if (!isProd) {
     process.env.DISABLE_HMR = 'true';
-    const { createServer: createViteServer } = await import('vite');
-    const vite = await createViteServer({
-      server: { middlewareMode: true, hmr: false, ws: false },
-      appType: 'spa',
-    });
+    process.env.VITE_CONFIG_NATIVE_IGNORE_WARNING = 'true';
 
     // Serve a WebSocket-free client shim when HMR is disabled so CSS updates
     // and import.meta.hot calls succeed without opening a failing ws://24678 socket.
@@ -283,7 +308,21 @@ export class ErrorOverlay extends (globalThis.HTMLElement || class {}) {}
 `);
     });
 
-    app.use(vite.middlewares);
+    const vitePromise = import('vite').then(({ createServer: createViteServer }) =>
+      createViteServer({
+        server: { middlewareMode: true, hmr: false, ws: false },
+        appType: 'spa',
+      }),
+    );
+
+    app.use(async (req, res, next) => {
+      try {
+        const vite = await vitePromise;
+        vite.middlewares(req, res, next);
+      } catch (err) {
+        next(err);
+      }
+    });
   } else {
     const distDir = path.resolve(process.cwd(), 'dist');
     app.use(express.static(distDir));
@@ -297,9 +336,17 @@ export class ErrorOverlay extends (globalThis.HTMLElement || class {}) {}
     });
   }
 
-  app.listen(PORT, '0.0.0.0', () => {
-    console.log(`Sentinel PAM Orchestrator listening on http://0.0.0.0:${PORT}`);
+  const server = app.listen(PORT, HOST, () => {
+    console.log(`PAM AI Assistant listening on http://${HOST}:${PORT}`);
+  });
+
+  server.on('error', (err) => {
+    console.error('Server failed to bind:', err);
+    process.exit(1);
   });
 }
 
-startServer();
+startServer().catch((err) => {
+  console.error('Failed to start server:', err);
+  process.exit(1);
+});

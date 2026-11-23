@@ -1,5 +1,5 @@
 {
-  "name": "Sentinel PAM Orchestrator",
+  "name": "PAM AI Assistant",
   "description": "Hub-and-spoke multi-agent orchestration console for just-in-time privileged access verification, Tree-of-Thought policy evaluation, blind critic auditing, and adversarial safety benchmarking.",
   "requestFramePermissions": [],
   "majorCapabilities": [

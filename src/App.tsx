@@ -78,7 +78,7 @@ const NAV_ITEMS: Array<{
   },
   {
     id: 'benchmark',
-    label: 'Phase 4 Suite',
+    label: 'Adversarial & Safety Evaluation Suite',
     breadcrumb: 'Adversarial & Safety Evaluation',
     icon: ShieldCheck,
   },
@@ -278,7 +278,7 @@ export default function App() {
   if (fixturesLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-slate-50 text-slate-700 text-sm font-medium">
-        Loading Sentinel PAM multi-agent orchestration engine & fixtures...
+        Loading PAM AI Assistant multi-agent orchestration engine & fixtures...
       </div>
     );
   }
@@ -326,7 +326,7 @@ export default function App() {
             className="font-display text-base font-bold tracking-tight text-slate-900 hover:text-slate-600 transition-colors cursor-pointer"
             title="Return to Access Request Portal"
           >
-            Sentinel PAM
+            PAM AI Assistant
           </button>
         </div>
 
@@ -347,7 +347,7 @@ export default function App() {
                 key={item.id}
                 type="button"
                 onClick={() => setViewMode(item.id)}
-                className={`w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-md transition-colors whitespace-nowrap cursor-pointer ${
+                className={`w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-md transition-colors text-left leading-snug cursor-pointer ${
                   active
                     ? 'bg-slate-900 text-white'
                     : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
@@ -392,7 +392,7 @@ export default function App() {
           <aside className="relative w-64 bg-white h-full border-r border-slate-200 flex flex-col z-10">
             <div className="h-16 px-5 flex items-center justify-between border-b border-slate-200">
               <span className="font-display text-base font-bold text-slate-900">
-                Sentinel PAM
+                PAM AI Assistant
               </span>
               <button
                 type="button"

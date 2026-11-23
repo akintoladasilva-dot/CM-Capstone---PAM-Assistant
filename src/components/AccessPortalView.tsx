@@ -78,7 +78,7 @@ export function AccessPortalView({
     {
       id: 'welcome',
       sender: 'assistant',
-      text: 'Hello! I am your Sentinel PAM AI Access Assistant. Describe the privileged access you need (e.g., "netadmin needs 30m emergency break-fix access on vpn-gw-01 to renew TLS cert"), and I will coordinate the background agents, query Splunk telemetry, verify policies, and securely provision JIT access.',
+      text: 'Hello! I am your PAM AI Assistant. Describe the privileged access you need (e.g., "netadmin needs 30m emergency break-fix access on vpn-gw-01 to renew TLS cert"), and I will review it against several criteria to determine whether to grant the access.',
       timestamp: new Date().toLocaleTimeString(),
     },
   ]);
@@ -359,7 +359,7 @@ export function AccessPortalView({
           </div>
           <div>
             <h1 className="font-display text-lg font-bold text-slate-900 tracking-tight">
-              Sentinel PAM AI Access Assistant
+              PAM AI Assistant
             </h1>
             <p className="text-xs text-slate-500">
               Conversational JIT Privileged Access Request & Multi-Agent Verification.
@@ -413,7 +413,7 @@ export function AccessPortalView({
               >
                 <div className="flex items-center gap-2 mb-1 px-1">
                   <span className="text-[11px] font-semibold text-slate-500">
-                    {msg.sender === 'user' ? 'You' : 'Sentinel AI Assistant'}
+                    {msg.sender === 'user' ? 'You' : 'PAM AI Assistant'}
                   </span>
                   <span className="text-[10px] text-slate-400 font-mono">
                     {msg.timestamp}
@@ -671,15 +671,27 @@ export function AccessPortalView({
                 <Send className="w-4 h-4" />
               </button>
             </div>
-            <div className="flex items-center justify-between text-[11px] text-slate-500 px-1 mt-1.5">
+            <div className="flex flex-wrap items-center justify-between gap-2 text-[11px] text-slate-500 px-1 mt-1.5">
               <span>Press Enter to send request to multi-agent background orchestrator.</span>
-              <button
-                type="button"
-                onClick={onOpenDashboards}
-                className="font-medium text-slate-700 hover:underline cursor-pointer"
-              >
-                Open Policy and Validation Dashboards &rarr;
-              </button>
+              <div className="flex items-center gap-3">
+                <a
+                  href="/api/build-instructions.txt"
+                  download="BUILD_INSTRUCTIONS.txt"
+                  className="font-medium text-slate-600 hover:text-slate-900 hover:underline"
+                >
+                  Download Build Guide (.txt)
+                </a>
+                <span aria-hidden="true" className="text-slate-300">
+                  ·
+                </span>
+                <button
+                  type="button"
+                  onClick={onOpenDashboards}
+                  className="font-medium text-slate-700 hover:underline cursor-pointer"
+                >
+                  Open Policy and Validation Dashboards &rarr;
+                </button>
+              </div>
             </div>
           </div>
         </div>

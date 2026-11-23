@@ -60,7 +60,7 @@ export function BenchmarkView({
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
             <h2 className="text-lg font-semibold text-slate-900">
-              Phase 4 Adversarial & Safety Evaluation Suite
+              Adversarial & Safety Evaluation Suite
             </h2>
             <p className="text-sm text-slate-600 mt-1">
               Executes 13 verification cases covering prompt injection, stale
